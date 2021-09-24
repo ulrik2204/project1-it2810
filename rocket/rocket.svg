@@ -1,0 +1,79 @@
+<!-- Importing external CSS -->
+<?xml-stylesheet type="text/css" href="rocket.css" ?>
+<!-- The svg itself -->
+<!-- Using class instead of id in the children of the svg, as there will be multiple with that class -->
+<svg width="350" height="350" viewBox="0 0 350 350" fill="none" id="rocket" xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g id="group">
+    <!-- Main body rect -->
+    <g class="group-body-rect">
+      <rect x="8" y="20" width="40" height="60" fill="#00B934" onclick="changeFill('body-rect')" class="body-rect" />
+    </g>
+    <!-- The nose of the rocket -->
+    <g class="group-nose">
+      <path d="M28 0L48 20H8L28 0Z" fill="#2400FF" onclick="changeFill('nose')" class="nose" />
+    </g>
+    <!-- Left engine -->
+    <g class="group-left-engine">
+      <path d="M8 71L16 85H0L8 71Z" fill="#FF0000" onclick="changeFill('left-engine')" class="left-engine" />
+    </g>
+    <!-- Right engine -->
+    <g class="group-right-engine">
+      <path d="M48 71L56 85H40L48 71Z" fill="#FF0000" onclick="changeFill('right-engine')" class="right-engine" />
+    </g>
+    <g class="group-window">
+      <!-- Outer window  -->
+      <circle cx="28" cy="39" r="10" fill="black" onclick="changeFill('outer-window')" class="outer-window" />
+      <!-- Inner window -->
+      <circle cx="28" cy="39" r="8" fill="#C4C4C4" onclick="changeFill('inner-window')" class="inner-window" />
+    </g>
+    <!-- The star -->
+    <g class="group-star">
+      <path
+        d="M28.5 56L30.1839 61.1824H35.6329L31.2245 64.3853L32.9084 69.5676L28.5 66.3647L24.0916 69.5676L25.7755 64.3853L21.3671 61.1824H26.8161L28.5 56Z"
+        fill="#2400FF" onclick="changeFill('star')" class="star" />
+    </g>
+    <g class="group-left-flame">
+      <!-- Left outer flame -->
+      <path d="M8 98L3 88H13L8 98Z" fill="#FAFF00" class="left-outer-flame" onclick="changeFill('left-outer-flame')" />
+      <ellipse cx="8" cy="88" rx="5" ry="2" fill="#FAFF00" class="left-outer-flame"
+        onclick="changeFill('left-outer-flame')" />
+      <!-- Left inner flame -->
+      <path d="M8 94.5L5.5 89.5H10.5L8 94.5Z" fill="#E37B00" class="left-inner-flame"
+        onclick="changeFill('left-inner-flame')" />
+      <ellipse cx="8" cy="89.5" rx="2.5" ry="1.5" fill="#E37B00" class="left-inner-flame"
+        onclick="changeFill('left-inner-flame')" />
+    </g>
+    <g class="group-right-flame">
+      <!-- Right outer flame -->
+      <path d="M48 98L43 88H53L48 98Z" fill="#FAFF00" class="right-outer-flame"
+        onclick="changeFill('right-outer-flame')" />
+      <ellipse cx="48" cy="88" rx="5" ry="2" fill="#FAFF00" class="right-outer-flame"
+        onclick="changeFill('right-outer-flame')" />
+      <!-- Right inner flame -->
+      <path d="M48 94.5L45.5 89.5H50.5L48 94.5Z" fill="#E37B00" class="right-inner-flame"
+        onclick="changeFill('right-inner-flame')" />
+      <ellipse cx="48" cy="89.5" rx="2.5" ry="1.5" fill="#E37B00" class="right-inner-flame"
+        onclick="changeFill('right-inner-flame')" />
+    </g>
+    <!-- A platform for the rocket to stand on  with moving and launching functionalilty-->
+    <g id="platform">
+      <rect x="-63" y="85" width="60" height="20" fill="#555555" onclick="move('left')" />
+      <text x="-45" y="100" font-family="Roboto" font-size="14px" fill="black" text-anchor="start"
+        onclick="move('left')">
+        Left
+
+      </text>
+      <rect x="-2.5" y="85" width="60" height="20" fill="#555555" onclick="launch()" />
+      <text x="3" y="100" font-family="Roboto" font-size="14px" fill="black" text-anchor="start" onclick="launch()">
+        Launch
+      </text>
+      <rect x="58" y="85" width="60" height="20" fill="#555555" onclick="move('right')" />
+      <text x="70" y="100" font-family="Roboto" font-size="14px" fill="black" onclick="move('right')">
+        Right
+      </text>
+    </g>
+  </g>
+  <!-- Js script -->
+  <script xlink:href="rocket.js" />
+</svg>

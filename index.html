@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- Import Roboto font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Import stylesheets -->
+    <link rel="stylesheet" type="text/css" href="styles/index.css" />
+    <link rel="stylesheet" type="text/css" href="styles/rocketsvg.css" />
+    <!-- Import jQuery -->
+    <script
+      src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      defer
+    ></script>
+    <!-- Import the js file with defer to make the js run before the document code is fired, and the code is excecuted in order. -->
+    <script src="scripts/rocketcanvas.js" defer></script>
+    <script src="scripts/rocketsvg.js" defer></script>
+    <script src="scripts/buttonfunc.js" defer></script>
+    <title>Mitt abstrakte bilde</title>
+  </head>
+  <body style>
+    <div id="root" class="scrollbar-container">
+      <!-- A popup element that is display none by default -->
+      <div id="popup" class="scrollbar-container">
+        <div onclick="closePopup()" class="main-button close-button">Close</div>
+        <h1>Dokumentasjon</h1>
+        <div id="popup-content">
+          <p>
+            Gjennom dette prosjektet har jeg fått muligheten til å sammenlikne
+            programmering av figurer gjennom Canvas API-et og bruk av SVG. For å
+            få siden til å se ut som jeg ønsker, har jeg brukt både CSS Grid og
+            Flexbox, mens jQuery hovedsaklig er brukt for funksjonaliteten på
+            SVG-en.
+          </p>
+          <p>
+            CSS Flexbox er nøkkelen til sidestrukturen. Jeg har et rot-element
+            som omfatter hele nettsiden, også det som ikke synes. Dette
+            elementet er ikke en Flexbox fordi det kan skape problemer med annen
+            funksjonalitet jeg vil ha på rotnivå. I stedet er en barnenode av
+            rotnoden med id "content" en Flexbox med flyt langs kolonnen. Den
+            representerer alt av hovedinnhold som er synlig. Her blir Flexbox
+            brukt til å sentrere siden horisontalt. Dette er bedre enn å bruke
+            <i>margin</i>, ettersom sentrering med Flexbox er mer dynamisk og
+            passer bedre for mobile skjermer. Flexbox brukes videre for
+            sentrering på denne måten nedover i html element-treet, ettersom en
+            så enkel nettside passer bra for å hovedsaklig være sentrert.
+            Flexbox passer ypperlig til dette, spesielt siden det ikke var
+            ønskeelig at teksten i seg selv skulle være senterjustert.
+          </p>
+          <p>
+            CSS Grid brukes for å plassere bildene i en fin avstand fra
+            hverandre horisontalt. Siden bildene ligger i "content", vil selve
+            boksen bildene da ligger i være sentrert, noe som faller i stil med
+            resten av nettsiden. Her kunne jeg også brukt Flexbox med
+            <i>justify-content: space-between</i>, men da blir jeg tvunget til å
+            sette fast bredde på containeren for å få mellomrom mellom bildene,
+            og dette kan skape komplikasjoner når jeg vil bytte til å vise
+            bildene under hverandre på mindre enheter. Ved å sette
+            <i>row-gap</i> og <i>column-gap</i>, er jeg sikker på at det kommer
+            til å se fint ut, uansett om bildene er presentert vertikalt eller
+            horisontalt.
+          </p>
+          <p>
+            For å lage SVG-en, lagde jeg først raketten i Figma, og kopierte det
+            jeg lagde som SVG inn i html-filen. Jeg eksperimenterte lenge med en
+            egen SVG fil importert som et html <i>object</i> med egne JavaScript
+            og CSS filer importert i seg, men dette førte til at jeg ikke hadde
+            tilgang til jQuery for å manipulere SVG-en. Etter å ha kopiert inn
+            SVG-koden, delte jeg elementene inn i grupper (<i>g</i> i svg) og ga
+            dem id-er og klasser for å kunne manipulere dem med CSS.
+            Interaktivitet med SVG-en ble laget ved å legge til
+            <i>onclick</i> funksjoner på SVG-elementene. Selve funksjonene er
+            skrevet i et eget JavaScript-dokument, og manipulerer blant annet
+            hvilke CSS klasser som elementene har til enhver tid. De foskjellige
+            CSS-klassene kjører bestemte animasjoner og transisjoner når det
+            passer seg. Farge og posisjon endres ved å legge til CSS som en
+            streng gjennom JavaScript og jQuery.
+          </p>
+          <p>
+            I canvas ble mesteparten gjort gjennom JavaScript. Her lagde jeg en
+            render-funksjon som tolket "shapes" - en array av JavaScript
+            "shape"-objecter med en egen struktur. Hvert "shape"-object
+            definerer hvor i canvaset et element befinner seg, elementets form,
+            bredde og høyde, samt farge, rotajon, synlighet og
+            klikk-funksjonalitet. For å forme selve elementene brukte jeg
+            Path2D. I render runksjonen ble hvert "shape"-object convertert til
+            en Path2D instans, og ved bruk av denne tegnet den elementet inn i
+            canvaset . Path2D-instansene var avgjørende for å kunne finne hva
+            man klikket på i canvaset. Ved et klikk i canvaset ble det sjekket
+            om det var et innenfor en path, og hvis klikket var det, ble
+            klikk-funksjonen til det korresponderende "shape"-objectet kjørt.
+            Klikk-funksjonen hadde tilgang på den nåværende "shapes"-arrayen som
+            var gengitt i canvas, og funksjonaliteten på raketten besto av å
+            generere en ny "shapes"-array med de forespurte endringene, og så
+            sende denne nye arrayen til render-funksjonen. Animasjoner i canvas
+            besto derfor av å manipulerte "shapes"-arrayen og rendere den med
+            nye verdier bestemt ut ifra matematiske funksjoner. For at
+            klikk-funksjonen til en "shape" til enhver tid skulle ha tilgang til
+            den nåværende "shapes"-arrayen, måtte klikk-event-handleren til
+            canvaset oppdateres i render-funksjonen hver gang canvaset ble
+            renderet på nytt. Ettersom event handlerne ikke ble kjørt under en
+            animasjon, ble de stacket oppå hverandre, noe som førte til uønsket
+            funksjonalitet der flere handlere ble kjørt ved et klikk på canvas.
+            Derfor kunne ikke klikk-funksjonalitet på canvas legges til i
+            animasjoner.
+          </p>
+          <p>
+            Jeg har brukt jQuery for manipulere elementene i SVG-en, samt å
+            håndtere knappen for å vise dokumentasjonen (det du har oppe nå).
+            For å endre fargen til rakett-delene, manipulerte jeg
+            <i>fill</i>-attributten til barnenodene i svg-en. Ved å bruke
+            attributten kunne jeg lettere hente ut tekstverdien til fargen, som
+            gjorde det lett å rotere farge. For å flytte på SVG-en manipulerte
+            jeg en CSS variabel ved hjelp av jQuery, og for å animere
+            rakettoppskytingen og eksplosjonen brukte jeg jQuery for å legge til
+            og fjerne CSS klasser, og kjøre event handlere som bare kjører en
+            gang. Når det gjelder vising av dokumentasjonen, brukes jQuery for å
+            gjøre popup-en synlig og usynlig, samt gjøre bakgrunnen uklar med
+            CSS. For både popup-en og SVG-en har jQuery forkortet koden
+            betraktelig og gjort den mer lesbar.
+          </p>
+          <p>
+            Jeg testet nettsiden i 3 nettlesere: Google Chrome, Mozilla Firefox
+            og Microsoft Edge. Det viktigste i cross-browser testing er at man
+            sikrer seg at alle HTML-elementene, CSS-egenskapene og
+            JS-funksjonene man bruker er støttet og oppfører seg som forventet.
+            Ved gjennomføringen av testen gjorde jeg derfor følgende manuell
+            testing:
+          </p>
+          <ol>
+            <li>
+              Testet at nettsiden så for det meste lik ut: at Flexbox, Grid og
+              de andre CSS funksjonene fungerte som de skulle.
+            </li>
+            <li>
+              Testet at "Left", "Right" og "Launch" fungerte som forventet på
+              både SVG og Canvas bildet.
+            </li>
+            <li>
+              For å teste timing og tilfeldige hendelser, trykket jeg aggresivt
+              rundt i canvas og kjørte animasjonene flere ganger.
+            </li>
+            <li>
+              Testet at nettsiden oppførte seg som forventet ved endring av
+              skjermstørrelse, slik at den fortsatt så bra ut.
+            </li>
+            <li>Sjekket at ingen feilmeldinger oppsto under testingen</li>
+          </ol>
+          <p>
+            Testingen viste at funskjonaliteten var lik i alle nettleserne. Det
+            er likevel verdt å merke seg at scrollbarene ser forskjellig ut i
+            Firefox fra de andre browserne, fordi Firefox har forskjellig støtte
+            for å endre på dem fra Chromium-browserne.
+          </p>
+          <h3>Hovedkilder</h3>
+          <ul>
+            <li>
+              <a href="https://www.youtube.com/watch?v=9IXvLM-Tlcw">
+                CSS og JS for å lage animasjoner med SVG
+              </a>
+            </li>
+            <li>
+              <a href="https://www.youtube.com/watch?v=3GqUM4mEYKA&t=483s">
+                Basic canvas
+              </a>
+            </li>
+            <li>
+              <a href="https://jsfiddle.net/baivong/ujnckxoa/">
+                Lage stjerne med canvas
+              </a>
+            </li>
+            <li><a href="https://api.jquery.com/">jQuery API</a></li>
+            <li>
+              <a href="https://www.youtube.com/watch?v=v_8CmC6cwUs"
+                >Endre scrollbar</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div id="content">
+        <!-- Intro text -->
+        <div id="intro-text">
+          <h1 class="title">Mitt abstrakte bilde</h1>
+          <p>
+            Jeg er en student som leker meg med SVG og Canvas API-et. Med dette
+            prosjektet har jeg gjenlært det jeg tidligere visste om SVG og
+            Canvas, jeg har i tillegg sett på Path2D i Canvas og å bruke CSS, JS
+            og jQuery med SVG.
+          </p>
+          <div onclick="openPopup()" class="main-button">Vis dokumentasjon</div>
+          <p>
+            Klikk på de forskjelleige delene av raketten for å bytte farge på
+            delen.
+            <br />
+            Klikk "Left" eller "Right" for å flytte raketten horisontalt.
+            <br />
+            Klikk "Launch" for å skyte og eksplodere raketten. Etter raketten
+            har eksplodert, kan du trykke på hvilken som helst del for å sette
+            den sammen igjen.
+          </p>
+        </div>
+        <div id="pictures">
+          <div class="picture-div">
+            <div class="picture-title left">Rakett - SVG</div>
+            <div id="main-svg">
+              <!-- Defining the svg in the html and not importing it externally to be able to use jQuery on its elements. -->
+              <!-- Using class instead of id in the children of the svg, as there will be multiple with that class -->
+              <svg
+                width="350"
+                height="350"
+                viewBox="0 0 350 350"
+                fill="none"
+                id="rocket"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <!--                   xmlns:xlink="http://www.w3.org/1999/xlink" -->
+                <g id="group">
+                  <!-- Main body rect -->
+                  <g id="group-body-rect">
+                    <rect
+                      x="8"
+                      y="20"
+                      width="40"
+                      height="60"
+                      fill="#00B934"
+                      onclick="changeFill('body-rect')"
+                      class="body-rect"
+                    />
+                  </g>
+                  <!-- The nose of the rocket -->
+                  <g id="group-nose">
+                    <path
+                      d="M28 0L48 20H8L28 0Z"
+                      fill="#2400FF"
+                      onclick="changeFill('nose')"
+                      class="nose"
+                    />
+                  </g>
+                  <!-- Left engine -->
+                  <g id="group-left-engine">
+                    <path
+                      d="M8 71L16 85H0L8 71Z"
+                      fill="#FF0000"
+                      onclick="changeFill('left-engine')"
+                      class="left-engine"
+                    />
+                  </g>
+                  <!-- Right engine -->
+                  <g id="group-right-engine">
+                    <path
+                      d="M48 71L56 85H40L48 71Z"
+                      fill="#FF0000"
+                      onclick="changeFill('right-engine')"
+                      class="right-engine"
+                    />
+                  </g>
+                  <g id="group-window">
+                    <!-- Outer window  -->
+                    <circle
+                      cx="28"
+                      cy="39"
+                      r="10"
+                      fill="black"
+                      onclick="changeFill('outer-window')"
+                      class="outer-window"
+                    />
+                    <!-- Inner window -->
+                    <circle
+                      cx="28"
+                      cy="39"
+                      r="8"
+                      fill="#C4C4C4"
+                      onclick="changeFill('inner-window')"
+                      class="inner-window"
+                    />
+                  </g>
+                  <!-- The star -->
+                  <g id="group-star">
+                    <path
+                      d="M28.5 56L30.1839 61.1824H35.6329L31.2245 64.3853L32.9084 69.5676L28.5 66.3647L24.0916 69.5676L25.7755 64.3853L21.3671 61.1824H26.8161L28.5 56Z"
+                      fill="#2400FF"
+                      onclick="changeFill('star')"
+                      class="star"
+                    />
+                  </g>
+                  <g id="group-left-flame">
+                    <!-- Left outer flame -->
+                    <path
+                      d="M8 98L3 88H13L8 98Z"
+                      fill="#FAFF00"
+                      class="left-outer-flame"
+                      onclick="changeFill('left-outer-flame')"
+                    />
+                    <ellipse
+                      cx="8"
+                      cy="88"
+                      rx="5"
+                      ry="2"
+                      fill="#FAFF00"
+                      class="left-outer-flame"
+                      onclick="changeFill('left-outer-flame')"
+                    />
+                    <!-- Left inner flame -->
+                    <path
+                      d="M8 94.5L5.5 89.5H10.5L8 94.5Z"
+                      fill="#E37B00"
+                      class="left-inner-flame"
+                      onclick="changeFill('left-inner-flame')"
+                    />
+                    <ellipse
+                      cx="8"
+                      cy="89.5"
+                      rx="2.5"
+                      ry="1.5"
+                      fill="#E37B00"
+                      class="left-inner-flame"
+                      onclick="changeFill('left-inner-flame')"
+                    />
+                  </g>
+                  <g id="group-right-flame">
+                    <!-- Right outer flame -->
+                    <path
+                      d="M48 98L43 88H53L48 98Z"
+                      fill="#FAFF00"
+                      class="right-outer-flame"
+                      onclick="changeFill('right-outer-flame')"
+                    />
+                    <ellipse
+                      cx="48"
+                      cy="88"
+                      rx="5"
+                      ry="2"
+                      fill="#FAFF00"
+                      class="right-outer-flame"
+                      onclick="changeFill('right-outer-flame')"
+                    />
+                    <!-- Right inner flame -->
+                    <path
+                      d="M48 94.5L45.5 89.5H50.5L48 94.5Z"
+                      fill="#E37B00"
+                      class="right-inner-flame"
+                      onclick="changeFill('right-inner-flame')"
+                    />
+                    <ellipse
+                      cx="48"
+                      cy="89.5"
+                      rx="2.5"
+                      ry="1.5"
+                      fill="#E37B00"
+                      class="right-inner-flame"
+                      onclick="changeFill('right-inner-flame')"
+                    />
+                  </g>
+                  <!-- A platform for the rocket to stand on with moving and launching functionalilty-->
+                  <g id="platform">
+                    <rect
+                      x="-63"
+                      y="85"
+                      width="60"
+                      height="20"
+                      fill="#555555"
+                      onclick="move('left')"
+                    />
+                    <text
+                      x="-45"
+                      y="100"
+                      font-family="Roboto"
+                      font-size="14px"
+                      fill="black"
+                      text-anchor="start"
+                      onclick="move('left')"
+                    >
+                      Left
+                    </text>
+                    <rect
+                      x="-2.5"
+                      y="85"
+                      width="60"
+                      height="20"
+                      fill="#555555"
+                      onclick="launch()"
+                    />
+                    <text
+                      x="3"
+                      y="100"
+                      font-family="Roboto"
+                      font-size="14px"
+                      fill="black"
+                      text-anchor="start"
+                      onclick="launch()"
+                    >
+                      Launch
+                    </text>
+                    <rect
+                      x="58"
+                      y="85"
+                      width="60"
+                      height="20"
+                      fill="#555555"
+                      onclick="move('right')"
+                    />
+                    <text
+                      x="70"
+                      y="100"
+                      font-family="Roboto"
+                      font-size="14px"
+                      fill="black"
+                      onclick="move('right')"
+                    >
+                      Right
+                    </text>
+                  </g>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="picture-div">
+            <div class="picture-title">Rakett - Canvas</div>
+            <canvas id="main-canvas" width="350px" height="350px"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

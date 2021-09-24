@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+:root {
+  --rocket-position: translate(150px, 245px);
+}
+
+#group {
+  cursor: pointer;
+  transform-origin: center;
+  transform-box: border-box;
+  transition: transform 0.5s ease-in-out;
+  transform: var(--rocket-position);
+}
+
+/* All children of group */
+#group > * {
+  transition: transform 0.5s cubic-bezier(0.13, 1.95, 1, 0.54);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+#group.launch {
+  animation: launch-rocket 1s cubic-bezier(1, -0.16, 1, 0.99) 0s forwards;
+}
+
+@keyframes launch-rocket {
+  0% {
+    transform: var(--rocket-position);
+  }
+  100% {
+    transform: var(--rocket-position) translateY(-300px);
+    --rocket-position: var(--rocket-position) translate(-300px);
+  }
+}
+
+#group.explode .group-body-rect {
+  transform: translate(100px, 300px) rotate(90deg);
+}
+
+#group.explode .group-nose {
+  transform: translate(40px, 330px) rotate(100deg);
+}
+
+#group.explode .group-left-engine {
+  transform: translate(-200px, 300px) rotate(600deg);
+}
+
+#group.explode .group-right-engine {
+  transform: translate(156px, 310px) rotate(490deg);
+}
+
+#group.explode .group-star {
+  transform: translate(140px, 340px) rotate(10000deg);
+}
+
+#group.explode .group-window {
+  transform: translate(-45px, 314px) rotate(100deg);
+}
+
+#group.explode .group-left-flame {
+  transform: translate(-400px, 450px) rotate(8000deg);
+}
+#group.explode .group-right-flame {
+  transform: translate(340px, 420px) rotate(8000deg);
+}
